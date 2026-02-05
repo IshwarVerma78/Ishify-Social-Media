@@ -12,7 +12,7 @@ export const getUserData = async (req, res) => {
             return res.json({success: false, message:"User not found"})
         }
 
-        res.json({success: true, message: "User not found"});
+        res.json({success: true, user:user});
     }
     catch(error){
         console.log(error);
@@ -25,15 +25,15 @@ export const getUserData = async (req, res) => {
 //Update User Data
 export const updateUserData = async (req, res) => {
     try {
-        const { userId } = req.auth;
-        const {username, bio, location, full_name} = req.body;
+        const { userId } = req.auth();
+        let {username, bio, location, full_name} = req.body;
 
         const tempUser = await User.findById(userId);
 
         !username && (username = tempUser.username)
 
         if(tempUser.username !== username){
-            const user = User.findOne({username})
+            const user = await User.findOne({username})
             if(user){
                 username = tempUser.username
             }
