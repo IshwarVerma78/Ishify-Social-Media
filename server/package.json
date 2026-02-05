@@ -12,9 +12,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@clerk/express": "^1.7.66",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "imagekit": "^6.0.0",
     "inngest": "^3.49.3",
     "mongoose": "^9.1.5",
     "multer": "^2.0.2"
