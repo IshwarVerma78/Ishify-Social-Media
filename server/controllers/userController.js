@@ -135,7 +135,14 @@ export const discoverUsers = async (req, res)=>{
 export const followUser = async (req, res)=>{
     try {
         const { userId } = req.auth()
-        const { input } = req.body;
+        const { id } = req.body;
+
+         if (!id) {
+            return res.json({
+                success: false,
+                message: 'User id is required',
+            });
+        }
 
         const user = await User.findById(userId);
 
@@ -238,6 +245,11 @@ export const getUserConnections = async (req, res)=>{
     try{
         const {userId} = req.auth();
         const user = await User.findById(userId).populate('connection followers following')
+
+//         const user = await User.findById(userId)
+//   .populate('followers', 'full_name username profile_picture bio')
+//   .populate('following', 'full_name username profile_picture bio')
+//   .populate('connections', 'full_name username profile_picture bio');
 
         const connections = user.connections
         const followers = user.followers

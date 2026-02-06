@@ -2,6 +2,7 @@ import fs from 'fs'
 import Story from '../models/Story.js';
 import User from '../models/User.js';
 import { inngest } from '../inngest/index.js';
+import imagekit from '../configs/imageKit.js';
 
 // Add User Story
 export const addUserStory = async (req, res) => {

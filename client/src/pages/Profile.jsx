@@ -8,22 +8,51 @@ import PostCard from '../components/PostCard';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import ProfileModal from '../components/ProfileModal';
+import { useAuth } from '@clerk/clerk-react';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const Profile = () => {
+  const currentUser = useSelector((state)=>state.user.value)
+  const {getToken} = useAuth();
   const { profileId } = useParams()
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
   const [activeTab, setActiveTab] = useState('posts')
   const [showEdit, setShowEdit] = useState(false)
 
-  const fetchUser = async () => {
-    setUser(dummyUserData)
-    setPosts(dummyPostsData)
+  const fetchUser = async (profileId) => {
+    const token = await getToken();
+    try {
+      const { data } = await api.post(
+        '/api/user/profiles',
+        { profileId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (data.success) {
+        setUser(data.profile);
+        setPosts(data.posts);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+
+    
   }
 
-  useEffect(() => {
-    fetchUser()
-  }, [])
+useEffect(() => {
+  if (profileId) {
+    fetchUser(profileId);
+  } else {
+    fetchUser(currentUser._id);
+  }
+}, [profileId, currentUser]);
 
 
   return user ? (
