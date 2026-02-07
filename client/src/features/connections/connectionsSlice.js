@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../api/axios.js';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../api/axios";
+
 const initialState = {
   connections: [],
   pendingConnections: [],
@@ -8,9 +9,9 @@ const initialState = {
 };
 
 export const fetchConnections = createAsyncThunk(
-  'connections/fetchConnections',
+  "connections/fetchConnections",
   async (token) => {
-    const { data } = await api.get('/api/user/connections', {
+    const { data } = await api.get("/api/user/connections", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -18,24 +19,20 @@ export const fetchConnections = createAsyncThunk(
   }
 );
 
-
 const connectionsSlice = createSlice({
-  name: 'connections',
+  name: "connections",
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
-  builder.addCase(fetchConnections.fulfilled, (state, action) => {
-    if (action.payload) {
-      state.connections = action.payload.connections;
-      state.pendingConnections = action.payload.pendingConnections;
-      state.followers = action.payload.followers;
-      state.following = action.payload.following;
-    }
-  });
-}
-
+    builder.addCase(fetchConnections.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.connections = action.payload.connections;
+        state.pendingConnections = action.payload.pendingConnections;
+        state.followers = action.payload.followers;
+        state.following = action.payload.following;
+      }
+    });
+  },
 });
 
 export default connectionsSlice.reducer;
