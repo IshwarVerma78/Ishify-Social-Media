@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import storyRouter from "./routes/storyRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
+import aiRouter from "./routes/aiRoutes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
 app.use("/api/story", storyRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/ai", aiRouter);
 
 const PORT = process.env.PORT || 4000;
 

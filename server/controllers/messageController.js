@@ -18,12 +18,16 @@ export const sseController = (req, res) => {
 
   // Add the client's response object to the connections object
   connections[userId] = res;
-
+//   console.log(userId,"userID")
+// console.log(connections,"connections[userId]")
+// console.log(res,"res")
   // Send an initial event to the client
+  // console.log(" Connected to SSE stream")
   res.write("log: Connected to SSE stream\n\n");
 
   // Handle client disconnection
   req.on("close", () => {
+    
     // Remove the client's response object from the connections object
     delete connections[userId];
     console.log("Client disconnected");

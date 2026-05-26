@@ -12,8 +12,30 @@ export const addPost = async (req, res) => {
 
     let image_urls = [];
 
-    if (images.length) {
-      image_urls = await Promise.all(
+    // Check if there are pre-uploaded image URLs (e.g. from AI generation)
+    if (req.body.image_urls) {
+      if (Array.isArray(req.body.image_urls)) {
+        image_urls = [...req.body.image_urls];
+      } else if (typeof req.body.image_urls === "string") {
+        try {
+          const parsed = JSON.parse(req.body.image_urls);
+          if (Array.isArray(parsed)) {
+            image_urls = [...parsed];
+          } else {
+            image_urls = [parsed];
+          }
+        } catch {
+          if (req.body.image_urls.includes(",")) {
+            image_urls = req.body.image_urls.split(",").map(url => url.trim());
+          } else {
+            image_urls = [req.body.image_urls];
+          }
+        }
+      }
+    }
+
+    if (images && images.length) {
+      const uploaded_urls = await Promise.all(
         images.map(async (image) => {
           const fileBuffer = fs.readFileSync(image.path);
           const response = await imagekit.upload({
@@ -34,6 +56,7 @@ export const addPost = async (req, res) => {
           return url;
         })
       );
+      image_urls = [...image_urls, ...uploaded_urls];
     }
 
     await Post.create({
